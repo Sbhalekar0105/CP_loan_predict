@@ -1,10 +1,64 @@
 # Importing necessary libraries
 import pickle
 import streamlit as st
+import yfinance as yf
+import pandas as pd
+import altair as alt
+import plotly.express as px
 import numpy as np
+from streamlit_option_menu import option_menu
+import openai
+import json
+from streamlit_lottie import st_lottie
+from streamlit_feedback import streamlit_feedback
 from tensorflow.keras.models import load_model
 import warnings
 warnings.filterwarnings(action='ignore')
+
+st.set_page_config(page_title="Loan_Predict_App", 
+                   page_icon=":money_with_wings:",
+                   layout="wide",
+                   initial_sidebar_state="expanded")
+alt.themes.enable("dark")
+
+st.markdown("""
+    <style>
+        body {
+          background-color: #f0f2f5;  /* Light background */
+          color: #333;             /* Text color */
+        }
+        .stTitle {
+          color: #2e8b57;           /* Green for headings */
+        }
+        .stSubheading {
+          color: #f9a825;          /* Orange for subheadings */
+        }
+        .prediction {
+          font-size: 2em;
+          color: #2e8b57;           /* Green for the prediction text */
+        }
+        /* ... add more styling for cards, buttons, etc. as needed ... */
+    </style>
+    """, unsafe_allow_html=True)
+st.markdown("""
+    <style>
+        body {
+          background-color: #f0f2f5;  /* Light background */
+          color: #333;             /* Text color */
+        }
+        .stTitle {
+          color: #2e8b57;           /* Green for headings */
+        }
+        .stSubheading {
+          color: #f9a825;          /* Orange for subheadings */
+        }
+        .prediction {
+          font-size: 2em;
+          color: #2e8b57;           /* Green for the prediction text */
+        }
+        /* ... add more styling for cards, buttons, etc. as needed ... */
+    </style>
+    """, unsafe_allow_html=True)
 
 # Importing the models
 df = pickle.load(open('model/dataset.pkl','rb'))
@@ -39,41 +93,208 @@ if 'borrower_details' not in st.session_state:
         'revol_util': 98.5,
         'total_acc': 10.0
     }
+    st.markdown("""
+    <style>
+        body {
+          background-color: #f0f2f5;  /* Light background */
+          color: #333;             /* Text color */
+        }
+        .stTitle {
+          color: #2e8b57;           /* Green for headings */
+        }
+        .stSubheading {
+          color: #f9a825;          /* Orange for subheadings */
+        }
+        .prediction {
+          font-size: 2em;
+          color: #2e8b57;           /* Green for the prediction text */
+        }
+        /* ... add more styling for cards, buttons, etc. as needed ... */
+    </style>
+    """, unsafe_allow_html=True)
+    st.markdown("""
+    <style>
+        body {
+          background-color: #f0f2f5;  /* Light background */
+          color: #333;             /* Text color */
+        }
+        .stTitle {
+          color: #2e8b57;           /* Green for headings */
+        }
+        .stSubheading {
+          color: #f9a825;          /* Orange for subheadings */
+        }
+        .prediction {
+          font-size: 2em;
+          color: #2e8b57;           /* Green for the prediction text */
+        }
+        /* ... add more styling for cards, buttons, etc. as needed ... */
+    </style>
+    """, unsafe_allow_html=True)
 
 # Create a container for the sidebar
 sidebar = st.sidebar.container()
 
 # Add widgets to the sidebar
-with sidebar:
-    st.header('Navigation')
-    nav_item = st.radio('Go to', ('Home', 'Loan Details', 'Borrower Details'))
-
+def load_lottiefile(filepath : str):
+    with open("C:\\Users\\shubh\\Desktop\\CP\\loan.json","r", encoding="utf-8") as f:
+        return   json.load(f)
+with st.sidebar:
+    with st.container():
+        l,r = st.columns((1,1))
+        with l:
+            st.empty()
+        with r:
+            st.empty()
+    
+    selected = option_menu("App Navigation",["Home", "Borrower Details", "Loan Details", "Insights", "Chat Bot",],
+        icons=['house','pencil', 'pen','book', 'chat'],menu_icon='globe',default_index=0) 
+    styles={
+        "container": {"padding": "0!important", "background-color": " #0E1117"},
+        "icon": {"color": "white", "font-size": "20px"}, 
+        "nav-link": {"font-size": "17px", "text-align": "left", "margin":"0px", "--hover-color": "#53CCDC"},
+        "nav-link-selected": {"background-color": "#000000"},
+    }
+    lottie = load_lottiefile("C:\\Users\\shubh\\Desktop\\CP\\loan.json")
+    st_lottie(lottie,key='loc')
 # Create a container for the main content
 content = st.container()
 
 # Add content to the main container
+def load_lottiefile1(filepath : str):
+    with open("C:\\Users\\shubh\\Desktop\\CP\\place2.json","r", encoding="utf-8") as g:
+        return   json.load(g)
 with content:
-    if nav_item == 'Home':
-      # st.title('Lending-Club Loan Prediction App')
-      st.markdown("<h1 style='font-size: 35px;'><u>Lending-Club Loan Prediction App</u></h1>", unsafe_allow_html=True)
-      st.markdown("<h4>Using the power of Artificial Neural Networks to make informed financial decisions</h4>", unsafe_allow_html=True)
-      message = """
-      **Welcome to the Loan Status Predictor App!🥳**\n
-      With just few inputs, our model can predict whether a loan is Fully Paid or Charged Off.\n
-      To get started, simply fill in the Loan Details and Borrower Details sections accessible from the left-side navigation bar. 
-      Don't worry about missing inputs as default values have been set for each feature🤙. 
-      However, for optimal results, we recommend filling in all inputs.
-      Once you've entered all necessary details, hit the Predict button available in all three sections to see the prediction.
-      We hope this app helps you make informed financial decisions.\n
-      Thank you for using our Loan Status Predictor App!🤞
-      """
-      st.markdown(message)
+    if selected == "Home":
+      # st.title('Loan Prediction App')
+      st.markdown("<h1 style='color: #FAFAFA; text-align: center;'>MODERNIZED LOAN APPROVAL SYSTEM</h1>", unsafe_allow_html=True)
+      st.markdown("<h3 style='color: #FAFAFA; text-align: center;'>Using the power of Artificial Neural Networks to make informed financial decisions</h3>", unsafe_allow_html=True)
+      st.divider()
+
+      st.markdown("<h4 style='color: #FAFAFA; text-align: center;'>Welcome to the Modernized Loan Status Predictor App</h4>",unsafe_allow_html=True)
+      col1,col2=st.columns(2)
+      with col1:
+            st.header('Use Cases')
+            st.markdown(
+                """
+                - _Looking for a new loan?_
+                - _Conducting research for loan?_
+                - _Curious about your loan eligibility?_
+                - _Find out your instant predictions with our loan prediction app?_
+                """
+                )
+      with col2:
+            lottie2 = load_lottiefile1("C:\\Users\\shubh\\Desktop\\CP\\place2.json")
+            st_lottie(lottie2,key='place',height=250,width=300)
+      home_container = st.container()
+      home_container.markdown(
+                """
+                <style>
+                .home-container {
+                    background-color: #3FB0E8;
+                    padding: 20px;
+                    border-radius: 20px;
+                }
+
+                h1, h3, subheader, header {
+                    text-align: center;
+                }
+                .text{
+                background-color: #192841;
+                  color: #F9F9F9;
+                }
+
+                </style>
+               
+                <div class="home-container"; background-color: "#3FB0E8"; padding:"20px"; border-radius: "0px">
+
+                <div style="display: flex; justify-content: space-between; color: #192841; background-color: #3FB0E8">
+                    <div class="feature-column"; background-color: "#3FB0E8">
+                        <h3 class="text">Machine Learning Model</h3>
+                        <p style="justify-content: space-between;background-color: #192841;color: #F9F9F9">- Trained on a large dataset of Lending loans</p>
+                    </div>
+                    <div class="feature-column">
+                        <h3 class="text">User-friendly Interface</h3>
+                        <p style="justify-content: space-between;background-color: #192841;color: #F9F9F9">- Easily input loan and borrower details</p>
+                    </div>
+                    <div class="feature-column">
+                        <h3 class="text">Customizable  Input's</h3>
+                        <p style="justify-content: space-between;background-color: #192841;color: #F9F9F9">- Adjust inputs to see how they affect prediction</p>
+                    </div>
+                    <div class="feature-column">
+                        <h3 class="text">Instant Predictions</h3>
+                        <p style="justify-content: space-between;background-color: #192841;color: #F9F9F9">- Get loan status predictions in seconds</p>
+                    </div>
+                </div>
+
+                """, unsafe_allow_html=True)
+      st.divider()
+      with st.expander('Modernized Loan Approval System Advantages', expanded=True):
+           tab1, tab2, tab3, tab4 = st.tabs(["Improved Financial Planning","Reduced Risk of Default","Enhanced Risk Assessment", "Increased Transparency"])
+
+      with tab1:
+         st.header("Improved Financial Planning")
+         st.write("Gain insights for informed borrowing and budgeting.")
+
+      with tab2:
+         st.header("Reduced Risk of Default")
+         st.write("Make data-driven decisions to lower loan default risks.")
+
+      with tab3:
+         st.header("Enhanced Risk Assessment")
+         st.write("Streamline loan applications by identifying potentially risky borrowers.")
       
-    elif nav_item == 'Loan Details':
+      with tab4:
+         st.header("Increased Transparency")
+         st.write("Gain a deeper understanding of factors influencing loan outcomes.")
+
+            # Create four columns with background color and border radius using CSS
+      col1, col2, col3, col4 = st.columns(4)
+      for col in [col1, col2, col3, col4]:
+        col.markdown("""
+                <style>
+                .feature-column {
+                    background-color: #e0e0e0;   Light gray   
+                    padding: 10px;
+                    border-radius: 5px;
+                    margin: 5px;
+                }
+                </style>
+                """, unsafe_allow_html=True)
+      textcontainer = st.container()
+      textcontainer.markdown(
+                """
+                <style>
+                .textcontainer {
+                   /* background-color: #f5f5f5;   Light blue */
+                    padding: 20px;
+                    border-radius: 10px;
+                }
+
+                h1, h3 {
+                    text-align: center;
+                }
+
+                .animated-text {
+                    font-size: 1.2rem;
+                    animation: typing 3.5s steps(40, end) forwards;
+                }
+
+                @keyframes typing {
+                    from { width: 0 }
+                    to { width: 100% }
+                }
+                </style>
+
+                <div class="textcontainer">
+                <div class="animated-text">Thank you for using our Loan Status Predictor App!</div>
+          """, unsafe_allow_html=True)
+      
+    elif selected == "Loan Details":
       st.title('Loan Details')
       st.write('Enter Loan details here.')
       
-      loan_amnt = st.number_input('Loan Amount (in $)', min_value=0, step=1000)
+      loan_amnt = st.number_input('Loan Amount', min_value=0)
       term = st.selectbox('Term', [36,60])
       int_rate = st.number_input('Interest Rate', min_value=0.0, step=5.0, format="%.2f")
       installment = st.number_input('Monthly Payment', min_value=0.0, step=50.0, format="%.2f")
@@ -92,7 +313,7 @@ with content:
         }
 
 
-    elif nav_item == 'Borrower Details':
+    elif selected == "Borrower Details":
       st.title('Borrower Details')
       st.write('Enter Borrower details here.')
       
@@ -130,6 +351,325 @@ with content:
         'revol_util': revol_util,
         'total_acc': total_acc
         }
+    elif selected == "Insights":
+      st.write("""
+      # Shown are the insights of Loan Prediction App.
+      """)
+      # CSS styling
+      st.markdown("""
+      <style>
+
+      [data-testid="block-container"] {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      padding-top: 1rem;
+      padding-bottom: 0rem;
+      margin-bottom: -7rem;
+      }
+
+      [data-testid="stVerticalBlock"] {
+      padding-left: 0rem;
+      padding-right: 0rem;
+      }
+
+      [data-testid="stMetric"] {
+      background-color: #393939;
+      text-align: center;
+      padding: 15px 0;
+      }
+
+      [data-testid="stMetricLabel"] {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      }
+
+      [data-testid="stMetricDeltaIcon-Up"] {
+      position: relative;
+      left: 38%;
+      -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+      transform: translateX(-50%);
+      }
+
+      [data-testid="stMetricDeltaIcon-Down"] {
+      position: relative;
+      left: 38%;
+      -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+      transform: translateX(-50%);
+      }
+
+      </style>
+      """, unsafe_allow_html=True)
+
+
+      #######################
+      # Load data
+      df_reshaped = pd.read_csv('C:\\Users\\shubh\\Desktop\\CP\\India_data.csv')
+
+
+      #######################
+      # Sidebar
+      with st.sidebar:
+           st.title('Loan Data Dashboard')
+    
+      year_list = list(df_reshaped.year.unique())[::-1]
+    
+      selected_year = st.selectbox('Select a year', year_list)
+      df_selected_year = df_reshaped[df_reshaped.year == selected_year]
+      df_selected_year_sorted = df_selected_year.sort_values(by="loans", ascending=False)
+
+      color_theme_list = ['blues', 'cividis', 'greens', 'inferno', 'magma', 'plasma', 'reds', 'rainbow', 'turbo', 'viridis']
+      selected_color_theme = st.selectbox('Select a color theme', color_theme_list)
+      hide_table_row_index = """
+                <style>
+                thead tr th:first-child {display:none}
+                tbody th {display:none}
+                </style>
+                """
+      st.markdown(hide_table_row_index, unsafe_allow_html=True)
+
+
+      #######################
+      # Plots
+
+      # Heatmap
+      def make_heatmap(input_df, input_y, input_x, input_color, input_color_theme):
+          heatmap = alt.Chart(input_df).mark_rect().encode(
+            y=alt.Y(f'{input_y}:O', axis=alt.Axis(title="Year", titleFontSize=18, titlePadding=15, titleFontWeight=900, labelAngle=0)),
+            x=alt.X(f'{input_x}:O', axis=alt.Axis(title="", titleFontSize=18, titlePadding=15, titleFontWeight=900)),
+            color=alt.Color(f'max({input_color}):Q',
+                             legend=None,
+                             scale=alt.Scale(scheme=input_color_theme)),
+            stroke=alt.value('black'),
+            strokeWidth=alt.value(0.25),
+            ).properties(width=900
+            ).configure_axis(
+            labelFontSize=12,
+            titleFontSize=12
+            ) 
+      # height=300
+          return heatmap
+
+      # Choropleth map
+      df = pd.read_csv("./pending.csv")
+      def make_choropleth(df):
+          choropleth = px.choropleth(
+          df,
+          geojson="https://gist.githubusercontent.com/jbrobst/56c13bbbf9d97d187fea01ca62ea5112/raw/e388c4cae20aa53cb5090210a42ebb9b765c0a36/india_states.geojson",
+          featureidkey='properties.ST_NM',
+          locations='state',
+          color='pending loans',
+          color_continuous_scale='Reds'
+          )
+          choropleth.update_layout(
+          template='plotly_dark',
+          plot_bgcolor='rgba(0, 0, 255, 0)',
+          paper_bgcolor='rgba(0, 0, 255, 0)',
+          margin=dict(l=0, r=0, t=0, b=0),
+          height=350
+          )
+
+          choropleth.update_geos(fitbounds="locations", visible=False)
+          return choropleth
+
+
+        # Donut chart
+      def make_donut(input_response, input_text, input_color):
+        if input_color == 'blue':
+            chart_color = ['#29b5e8', '#155F7A']
+        if input_color == 'green':
+            chart_color = ['#27AE60', '#12783D']
+        if input_color == 'orange':
+            chart_color = ['#F39C12', '#875A12']
+        if input_color == 'red':
+            chart_color = ['#E74C3C', '#781F16']
+    
+        source = pd.DataFrame({
+            "Topic": ['', input_text],
+            "% value": [100-input_response, input_response]
+        })
+        source_bg = pd.DataFrame({
+            "Topic": ['', input_text],
+            "% value": [100, 0]
+        })
+    
+        plot = alt.Chart(source).mark_arc(innerRadius=45, cornerRadius=25).encode(
+        theta="% value",
+        color= alt.Color("Topic:N",
+                      scale=alt.Scale(
+                          #domain=['A', 'B'],
+                          domain=[input_text, ''],
+                          # range=['#29b5e8', '#155F7A']),  # 31333F
+                          range=chart_color),
+                      legend=None),
+          ).properties(width=130, height=130)
+    
+        text = plot.mark_text(align='center', color="#29b5e8", font="Lato", fontSize=32, fontWeight=700, fontStyle="italic").encode(text=alt.value(f'{input_response} %'))
+        plot_bg = alt.Chart(source_bg).mark_arc(innerRadius=45, cornerRadius=20).encode(
+        theta="% value",
+        color= alt.Color("Topic:N",
+                      scale=alt.Scale(
+                          # domain=['A', 'B'],
+                          domain=[input_text, ''],
+                          range=chart_color),  # 31333F
+                      legend=None),
+          ).properties(width=130, height=130)
+        return plot_bg + plot + text
+
+      # Convert population to text 
+      def format_number(num):
+          if num > 10000000:
+              if not num % 10000000:
+                  return f'{num // 10000000} K'
+              return f'{round(num / 10000000, 1)} K'
+          return f'{num // 100000} K'
+
+      # Calculation year-over-year population
+      def calculate_loans_difference(input_df, input_year):
+        selected_year_data = input_df[input_df['year'] == input_year].reset_index()
+        previous_year_data = input_df[input_df['year'] == input_year - 1].reset_index()
+        selected_year_data['loans_difference'] = selected_year_data.loans.sub(previous_year_data.loans, fill_value=0)
+        return pd.concat([selected_year_data.states, selected_year_data.id, selected_year_data.loans, selected_year_data.loans_difference], axis=1).sort_values(by="loans_difference", ascending=False)
+
+
+      #######################
+      # Dashboard Main Panel
+      col = st.columns((1.5, 4.5, 2), gap='medium')
+
+      with col[0]:
+            st.markdown('#### Approved/Rejected')
+
+            df_loans_difference_sorted = calculate_loans_difference(df_reshaped, selected_year)
+
+            if selected_year > 2010:
+                first_state_name = df_loans_difference_sorted.states.iloc[0]
+                first_state_loans = format_number(df_loans_difference_sorted.loans.iloc[0])
+                first_state_delta = format_number(df_loans_difference_sorted.loans_difference.iloc[0])
+            else:
+                first_state_name = '-'
+                first_state_loans = '-'
+                first_state_delta = ''
+            st.metric(label=first_state_name, value=first_state_loans, delta=first_state_delta)
+
+            if selected_year > 2010:
+                last_state_name = df_loans_difference_sorted.states.iloc[-1]
+                last_state_loans = format_number(df_loans_difference_sorted.loans.iloc[-1])   
+                last_state_delta = format_number(df_loans_difference_sorted.loans_difference.iloc[-1])   
+            else:
+                last_state_name = '-'
+                last_state_loans = '-'
+                last_state_delta = ''
+            st.metric(label=last_state_name, value=last_state_loans, delta=last_state_delta)
+
+    
+            st.markdown('#### States loans')
+
+            if selected_year > 2010:
+                df_greater_50000 = df_loans_difference_sorted[df_loans_difference_sorted.loans_difference > 50000]
+                df_less_50000 = df_loans_difference_sorted[df_loans_difference_sorted.loans_difference < -50000]
+        
+                # % of States with population difference > 50000
+                states_loan_greater = round((len(df_greater_50000)/df_loans_difference_sorted.states.nunique())*100)
+                states_loan_less = round((len(df_less_50000)/df_loans_difference_sorted.states.nunique())*100)
+                donut_chart_greater = make_donut(states_loan_greater, 'Approved', 'green')
+                donut_chart_less = make_donut(states_loan_less, 'Rejected', 'red')
+            else:
+                states_loan_greater = 0
+                states_loan_less = 0
+                donut_chart_greater = make_donut(states_loan_greater, 'Approved', 'green')
+                donut_chart_less = make_donut(states_loan_less, 'Rejected', 'red')
+
+            loan_col = st.columns((0.2, 1, 0.2))
+            with loan_col[1]:
+                st.write('Approved')
+                st.altair_chart(donut_chart_greater)
+                st.write('Rejected')
+                st.altair_chart(donut_chart_less)
+
+      with col[1]:
+          st.markdown("<h3 style='color: #FAFAFA; text-align: center;'>Total Loans</h3>", unsafe_allow_html=True)
+
+    
+          choropleth = make_choropleth(df)
+          st.plotly_chart(choropleth, use_container_width=True)
+    
+          heatmap = make_heatmap(df_reshaped, 'year', 'states', 'loans', selected_color_theme)
+          st.altair_chart(heatmap, use_container_width=True)
+    
+
+      with col[2]:
+          st.markdown('#### Top States')
+
+          st.dataframe(df_selected_year_sorted,
+                 column_order=("states", "loans"),
+                 hide_index=True,
+                 width=None,
+                 column_config={
+                    "states": st.column_config.TextColumn(
+                        "States",
+                    ),
+                    "loans": st.column_config.ProgressColumn(
+                        "loans",
+                        format="%f",
+                        min_value=0,
+                        max_value=max(df_selected_year_sorted.loans),
+                     )}
+                 )
+    
+      with st.expander('About', expanded=True):
+        st.write('''
+            - Data: [INDIA.DATA](https://www.kaggle.com/datasets/tanishaj225/loancsv)
+            - :orange[**Approved/Rejected**]: states with high approved/ rejected loans for selected year
+            - :orange[**States Loans**]: percentage of states with annual approved/ rejected loans > 50,000
+            ''')
+      
+    elif selected == "Chat Bot":
+
+      # app config
+      st.title("Chat-Bot")
+
+      openai.api_key = st.secrets["OPENAI_API_KEY"]
+
+      # Set a default model
+      if "openai_model" not in st.session_state:
+          st.session_state["openai_model"] = "gpt-3.5-turbo"
+
+      # Initialize chat history
+      if "messages" not in st.session_state:
+          st.session_state.messages = []
+
+      # Display chat messages from history on app rerun
+      for message in st.session_state.messages:
+          with st.chat_message(message["role"]):
+              st.markdown(message["content"])
+
+      # Accept user input
+      prompt = st.chat_input("What is up?")
+      if prompt:
+          with st.chat_message("user"):
+            st.markdown(prompt)
+          st.session_state.messages.append({"role": "user", "content": prompt})
+    
+
+      # Display assistant response in chat message container
+      with st.chat_message("assistant"):
+        message_placeholder = st.empty()
+        full_response = ""
+        for response in openai.chatCompletion.create(
+         model=st.session_state["openai_model"],
+         message=[
+             {"role": m["role"], "content": m["content"]}
+                for m in st.session_state.messages
+         ],
+         stream=True,
+         
+     ):
+          full_response += response.choices[0].delta.get("content","")
+        message_placeholder.markdown(full_response + "")
+      message_placeholder.markdown(full_response)
+      st.session_state.messages.append({"role": "user", "content": full_response})
 
 if st.button('Predict'):
     # Access loan details and borrower details from session state
@@ -436,6 +976,6 @@ if st.button('Predict'):
     prediction=int(model.predict(query)[0])
     st.title("Prediction:")
     if prediction ==0:
-      st.subheader("Fully Paid🙂")
+      st.subheader("APPROVED")
     else:
-      st.subheader("Charged Off☹️")
+      st.subheader("REJECTED")  
