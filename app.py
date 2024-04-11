@@ -138,7 +138,7 @@ sidebar = st.sidebar.container()
 
 # Add widgets to the sidebar
 def load_lottiefile(filepath : str):
-    with open("C:\\Users\\shubh\\Desktop\\CP\\loan.json","r", encoding="utf-8") as f:
+    with open("loan.json","r", encoding="utf-8") as f:
         return   json.load(f)
 with st.sidebar:
     with st.container():
