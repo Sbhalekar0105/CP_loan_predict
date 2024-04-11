@@ -165,4 +165,3 @@ streamlit-option-menu
 streamlit-lottie
 streamlit-feedback
 typing
-warnings
