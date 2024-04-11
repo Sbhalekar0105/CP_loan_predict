@@ -215,7 +215,7 @@ with content:
                 """
                 )
       with col2:
-            lottie2 = load_lottiefile1("C:\\Users\\shubh\\Desktop\\CP\\place2.json")
+            lottie2 = load_lottiefile1("place2.json")
             st_lottie(lottie2,key='place',height=180,width=300)
       st.subheader("",divider="rainbow", anchor=False)
       st.markdown("<h2 style='text-align: center; margin-bottom: -0.9em;'>Do you think a personal loan needs too much effort?</h2>", unsafe_allow_html=True)
@@ -1024,7 +1024,7 @@ with content:
 
       #######################
       # Load data
-      df_reshaped = pd.read_csv('C:\\Users\\shubh\\Desktop\\CP\\India_data.csv')
+      df_reshaped = pd.read_csv('India_data.csv')
 
 
       #######################
