@@ -164,6 +164,5 @@ plotly-express
 streamlit-option-menu
 streamlit-lottie
 streamlit-feedback
-time
 typing
 warnings
