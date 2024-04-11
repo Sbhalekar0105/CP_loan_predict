@@ -1241,9 +1241,9 @@ with content:
 
       # app config
       def load_lottiefile2(filepath : str):
-        with open("C:\\Users\\shubh\\Desktop\\CP\\new.json","r", encoding="utf-8") as g:
+        with open("new.json","r", encoding="utf-8") as g:
          return   json.load(g)
-      lottie = load_lottiefile2("C:\\Users\\shubh\\Desktop\\CP\\loan.json") 
+      lottie = load_lottiefile2("loan.json") 
       st.title("Chat-Bot")
       st_lottie(lottie,key='loc1',height=120,width=170)
       st.subheader("",divider="rainbow", anchor=False)
