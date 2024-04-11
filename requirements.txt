@@ -161,7 +161,7 @@ zipp==3.15.0
 streamlit==1.21.0
 groq
 plotly-express
-streamlit-option-menu=
+streamlit-option-menu
 streamlit-lottie
 streamlit-feedback
 time
