@@ -147,7 +147,7 @@ with st.sidebar:
             st.empty()
         with r:
             st.empty()
-    lottie = load_lottiefile("C:\\Users\\shubh\\Desktop\\CP\\loan.json")
+    lottie = load_lottiefile("loan.json")
     st_lottie(lottie,key='loc')
     selected = option_menu("App Navigation",["Home", "Borrower Details", "Loan Details","EMI Calculator","Check CIBIL Score", "Insights","Chat Bot"],
         icons=['house','pencil', 'pen','app-indicator','check','activity' ,'chat'],menu_icon='cast',default_index=0)
@@ -190,7 +190,7 @@ with st.sidebar:
         "nav-link-selected": {"background-color": "#000000"},
     }
 def load_lottiefile1(filepath : str):
-    with open("C:\\Users\\shubh\\Desktop\\CP\\place2.json","r", encoding="utf-8") as g:
+    with open("place2.json","r", encoding="utf-8") as g:
         return   json.load(g)    
 # Create a container for the main content
 content = st.container()
