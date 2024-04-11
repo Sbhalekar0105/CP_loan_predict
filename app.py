@@ -445,7 +445,7 @@ with content:
       """
       st.markdown(header_html, unsafe_allow_html=True)
       # Displaying the table
-      st.table(df.style.set_table_styles([{'selector': 'th', 'props': [('background-color', '#3FB0E8')]}]))
+      st.table(df.style.set_table_styles([{'selector': 'th', 'props': [('background-color', '#FF4B4B')]}]))
     elif selected == "Borrower Details":
       st.title('Borrower Details')
       st.write('Enter Borrower details here.')
