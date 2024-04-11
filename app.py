@@ -1,14 +1,16 @@
 # Importing necessary libraries
 import pickle
 import streamlit as st
-import yfinance as yf
 import pandas as pd
 import altair as alt
 import plotly.express as px
 import numpy as np
 from streamlit_option_menu import option_menu
-import openai
+from typing import Generator
+from groq import Groq
 import json
+import matplotlib.pyplot as plt
+import time
 from streamlit_lottie import st_lottie
 from streamlit_feedback import streamlit_feedback
 from tensorflow.keras.models import load_model
@@ -146,32 +148,62 @@ with st.sidebar:
             st.empty()
         with r:
             st.empty()
-    
-    selected = option_menu("App Navigation",["Home", "Borrower Details", "Loan Details", "Insights", "Chat Bot",],
-        icons=['house','pencil', 'pen','book', 'chat'],menu_icon='globe',default_index=0) 
+    lottie = load_lottiefile("C:\\Users\\shubh\\Desktop\\CP\\loan.json")
+    st_lottie(lottie,key='loc')
+    selected = option_menu("App Navigation",["Home", "Borrower Details", "Loan Details","EMI Calculator","Check CIBIL Score", "Insights","Chat Bot"],
+        icons=['house','pencil', 'pen','app-indicator','check','activity' ,'chat'],menu_icon='cast',default_index=0)
+    st.markdown("<h2 style='text-align: center; color: white;'>Do You Like Our App?</h2>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style='display: flex; justify-content: center;'>
+        <button style='border: none; background-color: transparent; padding: 10px; border-radius: 5px; cursor: pointer; box-shadow: 0 0 5px 2px green;'>
+            👍
+        </button>
+        <button style='border: none; background-color: transparent; padding: 10px; border-radius: 5px; cursor: pointer; box-shadow: 0 0 5px 2px red; margin-left: 10px;'>
+            👎
+        </button>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Styling for the sidebar
+    st.markdown(
+    """
+    <style>
+        .sidebar .sidebar-content {
+            background-color: #0E1117;
+        }
+        .sidebar .sidebar-content .stSelectbox {
+            color: white;
+        }
+        .sidebar .sidebar-content .stSelectbox .stSelectbox-options {
+            color: black;
+        }
+        .sidebar .sidebar-content h2 {
+            margin-top: 20px;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
     styles={
         "container": {"padding": "0!important", "background-color": " #0E1117"},
         "icon": {"color": "white", "font-size": "20px"}, 
         "nav-link": {"font-size": "17px", "text-align": "left", "margin":"0px", "--hover-color": "#53CCDC"},
         "nav-link-selected": {"background-color": "#000000"},
     }
-    lottie = load_lottiefile("C:\\Users\\shubh\\Desktop\\CP\\loan.json")
-    st_lottie(lottie,key='loc')
-# Create a container for the main content
-content = st.container()
-
-# Add content to the main container
 def load_lottiefile1(filepath : str):
     with open("C:\\Users\\shubh\\Desktop\\CP\\place2.json","r", encoding="utf-8") as g:
-        return   json.load(g)
+        return   json.load(g)    
+# Create a container for the main content
+content = st.container()
+# Add content to the main container
 with content:
     if selected == "Home":
       # st.title('Loan Prediction App')
-      st.markdown("<h1 style='color: #FAFAFA; text-align: center;'>MODERNIZED LOAN APPROVAL SYSTEM</h1>", unsafe_allow_html=True)
-      st.markdown("<h3 style='color: #FAFAFA; text-align: center;'>Using the power of Artificial Neural Networks to make informed financial decisions</h3>", unsafe_allow_html=True)
-      st.divider()
+      st.markdown("<h1 style='color: #F9F9F9; text-align: center;'>MODERNIZED LOAN APPROVAL SYSTEM</h1>", unsafe_allow_html=True)
+      st.markdown("<h3 style='color: #F9F9F9; text-align: center;'>Using the power of Artificial Neural Networks to make informed financial decisions</h3>", unsafe_allow_html=True)
+      st.subheader("",divider="rainbow", anchor=False)
 
-      st.markdown("<h4 style='color: #FAFAFA; text-align: center;'>Welcome to the Modernized Loan Status Predictor App</h4>",unsafe_allow_html=True)
+      st.markdown("<h4 style='color: #F9F9F9; text-align: center;'>Welcome to the Modernized Loan Status Predictor App</h4>",unsafe_allow_html=True)
       col1,col2=st.columns(2)
       with col1:
             st.header('Use Cases')
@@ -185,72 +217,193 @@ with content:
                 )
       with col2:
             lottie2 = load_lottiefile1("C:\\Users\\shubh\\Desktop\\CP\\place2.json")
-            st_lottie(lottie2,key='place',height=250,width=300)
-      home_container = st.container()
-      home_container.markdown(
-                """
-                <style>
-                .home-container {
-                    background-color: #3FB0E8;
-                    padding: 20px;
-                    border-radius: 20px;
-                }
+            st_lottie(lottie2,key='place',height=180,width=300)
+      st.subheader("",divider="rainbow", anchor=False)
+      st.markdown("<h2 style='text-align: center; margin-bottom: -0.9em;'>Do you think a personal loan needs too much effort?</h2>", unsafe_allow_html=True)
+      st.markdown("<h5 style='text-align: center; margin-bottom: 30px;'>Getting a personal loan was never this easy</h5>", unsafe_allow_html=True)
+# Function to display markdown content with image
+      def display_image_with_text(image_path, title, content):
+       st.image(image=image_path,width=80, caption=title)
+       st.write(content)
+# Display images using display_image_with_text function
+      col1, col2, col3 = st.columns(3)
 
-                h1, h3, subheader, header {
-                    text-align: center;
-                }
-                .text{
-                background-color: #192841;
-                  color: #F9F9F9;
-                }
+      with col1:
+       display_image_with_text("1.png", "Instant personal loans", "Get instant personal loans from 5000 to 5 lakh to fit all your needs and dreams")
+       display_image_with_text("2.jpg", "Quick Approvals & Disbursals", "Get prompt loan approval and money in your account")
 
-                </style>
-               
-                <div class="home-container"; background-color: "#3FB0E8"; padding:"20px"; border-radius: "0px">
+      with col2:
+       display_image_with_text("3.jpg", "Paperless Documentation", "Upload pictures of your KYC documents and sign your loan application digitally")
+       display_image_with_text("4.jpg", "ZERO Affordable EMI plans", "Easy to manage EMI plans with reminders and auto-debit features so that you don't miss out on timely payments")
 
-                <div style="display: flex; justify-content: space-between; color: #192841; background-color: #3FB0E8">
-                    <div class="feature-column"; background-color: "#3FB0E8">
-                        <h3 class="text">Machine Learning Model</h3>
-                        <p style="justify-content: space-between;background-color: #192841;color: #F9F9F9">- Trained on a large dataset of Lending loans</p>
-                    </div>
-                    <div class="feature-column">
-                        <h3 class="text">User-friendly Interface</h3>
-                        <p style="justify-content: space-between;background-color: #192841;color: #F9F9F9">- Easily input loan and borrower details</p>
-                    </div>
-                    <div class="feature-column">
-                        <h3 class="text">Customizable  Input's</h3>
-                        <p style="justify-content: space-between;background-color: #192841;color: #F9F9F9">- Adjust inputs to see how they affect prediction</p>
-                    </div>
-                    <div class="feature-column">
-                        <h3 class="text">Instant Predictions</h3>
-                        <p style="justify-content: space-between;background-color: #192841;color: #F9F9F9">- Get loan status predictions in seconds</p>
-                    </div>
-                </div>
+      with col3:
+       display_image_with_text("5.jpg", "One-click subsequent personal loans", "Need another loan from PaySense? With one-time documentation, it's just a click away.")
+       display_image_with_text("6.jpg", "Zero Credit History", "Never taken a personal loan previously? It's okay - we serve the users who are new to the credit and lending system.")     
+      st.subheader("",divider="rainbow", anchor=False)
+      box1_style = """
+        padding: 14px;
+        border-radius: 10px;
+        background-color: #3FB0E8;
+        color: white;
+        margin-bottom: 1px;
+        """
+      box2_style = """
+        padding: 3px;
+        border-radius: 10px;
+        background-color: #3FB0E8;
+        color: white;
+        """
+      eligibility_criteria = """
+        ### Are you eligible for a personal loan?
+        To be eligible to get a personal loan from,you should fulfill the following eligibility criteria:
+        - **Resident of India**
+        - **Age: 21 years to 60 years**
+        - **Employment Type: Salaried and Self-employed**
+        """
+      documents_required = """
+      ### What are required documents?
+      To get a personal loan instantly, you should keep some documents handy before you start applying.
 
-                """, unsafe_allow_html=True)
-      st.divider()
-      with st.expander('Modernized Loan Approval System Advantages', expanded=True):
-           tab1, tab2, tab3, tab4 = st.tabs(["Improved Financial Planning","Reduced Risk of Default","Enhanced Risk Assessment", "Increased Transparency"])
+      - **Proof of Identity:**
+      PAN Card & Selfie\n
+      - **Proof of Address:**
+      Aadhaar card, Voter ID, Passport or Driving License\n
+      - **Proof of Income:**
+      Net-Banking or last 3 months bank e-statements\n
+      """
 
+# Splitting the content into two columns
+      col1, col2 = st.columns(2)
+
+# Displaying the content in the first column
+      with col1:
+        st.markdown(
+        f"""
+        <div style="{box1_style}">
+            {eligibility_criteria}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Displaying the content in the second column
+      with col2:
+        st.markdown(
+        f"""
+        <div style="{box2_style}">
+            {documents_required}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+      st.subheader("",divider="rainbow", anchor=False)
+
+      with st.expander('### **Modernized Loan Approval System Advantages**', expanded=True):
+           tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Improved Financial Planning","Reduced Risk of Default","Enhanced Risk Assessment", "Increased Transparency","Faster Decision Making","Cost Reduction"])
+
+      def load_lottiefile3(filepath : str):
+        with open("ani1.json","r", encoding="utf-8") as g:
+         return   json.load(g) 
+      def load_lottiefile4(filepath : str):
+        with open("ani2.json","r", encoding="utf-8") as g:
+         return   json.load(g) 
+      def load_lottiefile5(filepath : str):
+        with open("ani3.json","r", encoding="utf-8") as g:
+         return   json.load(g)
+      def load_lottiefile6(filepath : str):
+        with open("ani4.json","r", encoding="utf-8") as g:
+         return   json.load(g)
+      def load_lottiefile7(filepath : str):
+        with open("ani5.json","r", encoding="utf-8") as g:
+         return   json.load(g) 
+      def load_lottiefile8(filepath : str):
+        with open("ani6.json","r", encoding="utf-8") as g:
+         return   json.load(g) 
       with tab1:
-         st.header("Improved Financial Planning")
-         st.write("Gain insights for informed borrowing and budgeting.")
-
+         st.markdown("<h2 style='text-align: center;'>Improved Financial Planning</h2>",unsafe_allow_html=True)
+         st.subheader("",divider="", anchor=False)
+         col1, col2 = st.columns(2)
+         with col1:
+          st.write("• _Plan future expenses effectively_.")
+          st.write("• _Analyze historical data for better financial decisions_.")
+          st.write("• _Gain insights for informed borrowing and budgeting_.")
+          st.write("• _Incorporate goal-setting frameworks to align financial decisions_.")
+          st.write("• _Employ forecasting techniques to anticipate future financial needs_.")
+         with col2:
+          lottie2 = load_lottiefile3("ani1.json")
+          st_lottie(lottie2,key='new',height=180,width=300,)
+      
       with tab2:
-         st.header("Reduced Risk of Default")
-         st.write("Make data-driven decisions to lower loan default risks.")
-
+         st.markdown("<h2 style='text-align: center;'>Reduced Risk of Default</h2>",unsafe_allow_html=True)
+         st.subheader("",divider="", anchor=False)
+         col1, col2 = st.columns(2)
+         with col1:
+          st.write("• _Identify early warning signs of potential defaults_.")
+          st.write("• _Identify warning signs of potential defaults early on_.")
+          st.write("• _Make data-driven decisions to lower loan default risks_.")
+          st.write("• _Implement predictive models to assess default likelihood_.")
+          st.write("• _Implement risk scoring models to assess default probability_.")
+         with col2:
+           lottie2 = load_lottiefile4("ani2.json")
+           st_lottie(lottie2,key='new5',height=180,width=300,)
       with tab3:
-         st.header("Enhanced Risk Assessment")
-         st.write("Streamline loan applications by identifying potentially risky borrowers.")
+         st.markdown("<h2 style='text-align: center;'>Enhanced Risk Assessment</h2>",unsafe_allow_html=True)
+         st.subheader("",divider="", anchor=False)
+         col1, col2 = st.columns(2)
+         with col1:
+          st.write("• _Automate creditworthiness evaluation processes_.")
+          st.write("• _Utilize machine learning algorithms for risk profiling_.") 
+          st.write("• _Streamline loan applications by identifying potentially risky borrowers_.")
+          st.write("• _Implement real-time monitoring to promptly detect changes in borrower risk profiles_.")
+          st.write("• _Leverage machine learning to develop comprehensive risk profiles for more accurate assessments_.")
+         with col2:
+          lottie2 = load_lottiefile5("ani3.json")
+          st_lottie(lottie2,key='new1',height=180,width=350,)
       
       with tab4:
-         st.header("Increased Transparency")
-         st.write("Gain a deeper understanding of factors influencing loan outcomes.")
+         st.markdown("<h2 style='text-align: center;'> Increased Transparency</h2>",unsafe_allow_html=True)
+         st.subheader("",divider="", anchor=False)
+         col1, col2 = st.columns(2)
+         with col1:
+          st.write("• _Enhance regulatory compliance through transparent processes_.")
+          st.write("• _Gain a deeper understanding of factors influencing loan outcomes_.")
+          st.write("• _Provide borrowers with clear explanations of loan terms and conditions_.")
+          st.write("•_Improve regulatory compliance by ensuring transparent processes and clear communication_.")
+          st.write("• _Utilize technology to provide easily accessible information on loan terms and conditions_.")
+         with col2:
+          lottie2 = load_lottiefile6("ani4.json")
+          st_lottie(lottie2,key='new2',height=180,width=350,)  
 
-            # Create four columns with background color and border radius using CSS
-      col1, col2, col3, col4 = st.columns(4)
-      for col in [col1, col2, col3, col4]:
+      with tab5:
+         st.markdown("<h2 style='text-align: center;'>Faster Decision Making</h2>",unsafe_allow_html=True)
+         st.subheader("",divider="", anchor=False)
+         col1, col2 = st.columns(2)
+         with col1:
+          st.write("• _Enhance customer experience with prompt responses_.") 
+          st.write("• _Reduce processing time through automated workflows_.")
+          st.write("• _Make quicker loan approval decisions to improve customer satisfaction_.")
+          st.write("• _Implement efficient automated workflows to streamline processing time_.")
+          st.write("• _Utilize data-driven insights to expedite loan approval processes, boosting customer satisfaction_ .") 
+         with col2:
+          lottie2 = load_lottiefile7("ani5.json")
+          st_lottie(lottie2,key='new3',height=150,width=300,)
+
+      with tab6:
+         st.markdown("<h2 style='text-align: center;'>Cost Reduction</h2>",unsafe_allow_html=True)
+         st.subheader("",divider="", anchor=False)
+         col1, col2 = st.columns(2)
+         with col1:
+          st.write("• _Minimize paperwork and administrative overhead_.")
+          st.write("• _Optimize resource allocation for improved efficiency_.")
+          st.write("• _Streamline processes to minimize paperwork and administrative burdens_.")
+          st.write("• _Lower operational costs associated with manual loan processing methods_.")  
+          st.write("• _Implement digital solutions to reduce operational costs linked to manual loan processing_.")
+         with col2:
+          lottie2 = load_lottiefile8("ani6.json")
+          st_lottie(lottie2,key='new4',height=220,width=450,)
+      # Create four columns with background color and border radius using CSS
+      col1, col2, col3, col4,col5, col6 = st.columns(6)
+      for col in [col1, col2, col3, col4, col5, col6]:
         col.markdown("""
                 <style>
                 .feature-column {
@@ -261,58 +414,39 @@ with content:
                 }
                 </style>
                 """, unsafe_allow_html=True)
-      textcontainer = st.container()
-      textcontainer.markdown(
-                """
-                <style>
-                .textcontainer {
-                   /* background-color: #f5f5f5;   Light blue */
-                    padding: 20px;
-                    border-radius: 10px;
-                }
-
-                h1, h3 {
-                    text-align: center;
-                }
-
-                .animated-text {
-                    font-size: 1.2rem;
-                    animation: typing 3.5s steps(40, end) forwards;
-                }
-
-                @keyframes typing {
-                    from { width: 0 }
-                    to { width: 100% }
-                }
-                </style>
-
-                <div class="textcontainer">
-                <div class="animated-text">Thank you for using our Loan Status Predictor App!</div>
-          """, unsafe_allow_html=True)
-      
-    elif selected == "Loan Details":
-      st.title('Loan Details')
-      st.write('Enter Loan details here.')
-      
-      loan_amnt = st.number_input('Loan Amount', min_value=0)
-      term = st.selectbox('Term', [36,60])
-      int_rate = st.number_input('Interest Rate', min_value=0.0, step=5.0, format="%.2f")
-      installment = st.number_input('Monthly Payment', min_value=0.0, step=50.0, format="%.2f")
-      grade = st.selectbox('Grade', np.sort(df['grade'].unique(), kind='mergesort'))
-      sub_grade = st.selectbox('Sub-Grade', np.sort(df['sub_grade'].unique(), kind='mergesort'))
-      last_pymnt_amnt = st.number_input('Loan Payment Amount', min_value=0.0, step=100.0, format="%.2f")
-      
-      st.session_state['loan_details'] = {
-        'loan_amnt': loan_amnt,
-        'term': term,
-        'int_rate': int_rate,
-        'installment': installment,
-        'grade': grade,
-        'sub_grade': sub_grade,
-        'last_pymnt_amnt': last_pymnt_amnt,
-        }
-
-
+      st.markdown("<h3 style='text-align: left;'>Personal loan comparison index :</h3>",unsafe_allow_html=True)
+      st.subheader("",divider="rainbow", anchor=False)
+      data = {
+    "Bank/NBFC": ["Lending Kart", "Axis Finance", "ICICI", "NIRA", "Muthoot Finance", "Home credit", "Bajaj Finserv", "Fullerton"],
+    "Interest rate": ["(18 - 30)%", "(12 - 18)%", "(10.5 - 19)%", "-", "14.5 - 25%", "0% - 5%", "13%", "(11.99 - 36)%"],
+    "Loan amount": ["50,000 - 1 Cr", "50,000 max 50L", "50,000 - 25 Lacs", "5,000 - 100,000 INR", "1 Lakh metro , 50 k Non metro - Max 10 Lakhs", "25,000 - 200,000 INR", "-", "-"],
+    "Processing fee": ["At 2%", "2% on loan amount + GST", "Upto 2.25% of loan amount plus GST", "350-750 depending on the loan amount", "1.75% Per disbursal", "0% - 5%", "upto 4.13% on loan amount + Taxes", "0-6% Loan Amount"],
+    "Tenure": ["-", "Upto 60 Months", "12 to 72 months", "3-12 months", "12-60 months", "-", "3-36 months", "upto 60 Months"],
+    "Target age group": ["18-65", "21-60", "23-58", "21-55", "23-60", "19+", "23-55", "21-60"],
+    "Serviceable location": ["Pan India", "Pan India", "-", "Pan India", "Pan India", "-", "Pan India", "-"],
+    "Salary bracket": ["12 lakhs annual turnover and above", "Tier 1: 25K, Tier 2: 20k, Tier 3: 15k", "30K+", "12000+", "20K - 25K", "INR 10,000 +", "Tier 1: 25K +,Tier 2: 35K +", "Tier 1: 20K, Tier 2: 20K +"],
+    "Commercials offered": ["Slab wise, 50L - 3CR: 1-2%", "1.5%", "1.1% Per disbursal", "1500", "-", "1.4 % CPD", "650+", "750+"],
+    "Credit score": ["660 (560-660 will could be considered on case to case basis) + NTC", "650 min , actual >720 (V3), CIBIL>750", "750+", "660+", "750 & -1 & NTC", "670+ credit score", "650+", "750+"],
+    "Employment type": ["Self employed", "Salaried", "Salaried", "Salaried", "Salaried", "Salaried and self employed", "Salaried and self employed", "Salaried"],
+    "Product type": ["working capital loans and business loans", "Personal Loan", "PL", "Short term loan", "Personal Loan", "-", "PL/BL", "PL"]
+}
+      # Creating DataFrame
+      df = pd.DataFrame(data)
+      df.insert(0, "Sr. No.", range(1, len(df) + 1))
+      df.set_index("Sr. No.", inplace=True)
+      # Change header color
+      header_html = """
+      <style>
+      div.row-widget.stRadio>div{flex-direction:column;}
+      th {
+      background-color: #3FB0E8;
+      color: #F9F9F9; 
+      }
+      </style>
+      """
+      st.markdown(header_html, unsafe_allow_html=True)
+      # Displaying the table
+      st.table(df.style.set_table_styles([{'selector': 'th', 'props': [('background-color', '#3FB0E8')]}]))
     elif selected == "Borrower Details":
       st.title('Borrower Details')
       st.write('Enter Borrower details here.')
@@ -335,7 +469,6 @@ with content:
       revol_bal = st.number_input('Revolving balance', min_value=0.0, step=1000.0)
       revol_util = st.number_input("Revolving credit utilization(%):", min_value=0.0, step=5.0)
       total_acc = st.number_input("Enter your total number of credit accounts:", min_value=0.0, value=0.0, step=1.0)
-      
       st.session_state['borrower_details'] = {
         'emp_length': emp_length,
         'home_ownership': home_ownership,
@@ -351,6 +484,492 @@ with content:
         'revol_util': revol_util,
         'total_acc': total_acc
         }
+      if st.button('Save'):
+          st.write('### Borrower Details has saved proceed to Loan Details.')
+          st.session_state['Loan Details'] = True
+    elif selected == "Loan Details":
+      st.title('Loan Details')
+      st.write('Enter Loan details here.')
+      
+      loan_amnt = st.number_input('Loan Amount', min_value=0)
+      term = st.selectbox('Term', [36,60])
+      int_rate = st.number_input('Interest Rate', min_value=0.0, step=5.0, format="%.2f")
+      installment = st.number_input('Monthly Payment', min_value=0.0, step=50.0, format="%.2f")
+      grade = st.selectbox('Grade', np.sort(df['grade'].unique(), kind='mergesort'))
+      sub_grade = st.selectbox('Sub-Grade', np.sort(df['sub_grade'].unique(), kind='mergesort'))
+      last_pymnt_amnt = st.number_input('Loan Payment Amount', min_value=0.0, step=100.0, format="%.2f")
+      
+      st.session_state['loan_details'] = {
+        'loan_amnt': loan_amnt,
+        'term': term,
+        'int_rate': int_rate,
+        'installment': installment,
+        'grade': grade,
+        'sub_grade': sub_grade,
+        'last_pymnt_amnt': last_pymnt_amnt,
+        }
+      if st.button('Predict'):
+    # Access loan details and borrower details from session state
+        loan_details = st.session_state.get('loan_details')
+        borrower_details = st.session_state.get('borrower_details')
+    
+        loan_amnt = loan_details['loan_amnt']
+        term = loan_details['term']
+        int_rate = loan_details['int_rate']
+        installment = loan_details['installment']
+        grade = loan_details['grade']
+    # Create a dictionary that maps each grade to its corresponding number
+        grade_map = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6}
+    # Map the selected grade to its corresponding number
+        grade = grade_map.get(grade, -1)
+    
+        sub_grade = loan_details['sub_grade']
+    # Create a dictionary that maps each sub_grade to its corresponding number
+        sub_grade_map= {'A1': 0, 'A2': 1, 'A3': 2, 'A4': 3, 'A5': 4, 
+                    'B1': 5, 'B2': 6, 'B3': 7, 'B4': 8, 'B5': 9, 
+                    'C1': 10, 'C2': 11, 'C3': 12, 'C4': 13, 'C5': 14, 
+                    'D1': 15, 'D2': 16, 'D3': 17, 'D4': 18, 'D5': 19, 
+                    'E1': 20, 'E2': 21, 'E3': 22, 'E4': 23, 'E5': 24, 
+                    'F1': 25, 'F2': 26, 'F3': 27, 'F4': 28, 'F5': 29, 
+                    'G1': 30, 'G2': 31, 'G3': 32, 'G4': 33, 'G5': 34}
+    # Map the selected sub_grade to its corresponding number
+        sub_grade = sub_grade_map.get(sub_grade, -1)
+    
+        last_pymnt_amnt = float(loan_details['last_pymnt_amnt'])
+    
+        emp_length = borrower_details['emp_length']
+    # Create a dictionary that maps each emp_length to its corresponding number
+        emp_length_map= {'<1': 0,'1': 1,'2': 2,'3': 3,
+                    '4': 4, '5': 5,'6': 6,'7': 7,
+                    '8': 8,'9': 9, '10+': 10}
+    # Map the selected sub_grade to its corresponding number
+        emp_length = emp_length_map.get(emp_length, -1)
+    
+        home_ownership = borrower_details['home_ownership']
+        annual_inc = borrower_details['annual_inc']
+        verification_status = borrower_details['verification_status']
+        purpose = borrower_details['purpose']
+        dti = borrower_details['dti']
+        delinq_2yrs = borrower_details['delinq_2yrs']
+        inq_last_6mths = borrower_details['inq_last_6mths']
+        open_acc = borrower_details['open_acc']
+        pub_rec = borrower_details['pub_rec']
+        revol_bal = borrower_details['revol_bal']
+        revol_util = borrower_details['revol_util']
+        total_acc = borrower_details['total_acc']
+    
+        if home_ownership =='MORTGAGE':
+            home_ownership_MORTGAGE=1
+            home_ownership_NONE=0
+            home_ownership_OTHER=0
+            home_ownership_OWN=0
+            home_ownership_RENT=0
+        elif home_ownership =='NONE':
+            home_ownership_MORTGAGE=0
+            home_ownership_NONE=1
+            home_ownership_OTHER=0
+            home_ownership_OWN=0
+            home_ownership_RENT=0
+        elif home_ownership =='OTHER':
+            home_ownership_MORTGAGE=0
+            home_ownership_NONE=0
+            home_ownership_OTHER=1
+            home_ownership_OWN=0
+            home_ownership_RENT=0
+        elif home_ownership =='OWN':
+            home_ownership_MORTGAGE=0
+            home_ownership_NONE=0
+            home_ownership_OTHER=0
+            home_ownership_OWN=1
+            home_ownership_RENT=0
+        elif home_ownership =='RENT':
+            home_ownership_MORTGAGE=0
+            home_ownership_NONE=0
+            home_ownership_OTHER=0
+            home_ownership_OWN=0
+            home_ownership_RENT=1
+        else:
+            home_ownership_MORTGAGE=0
+            home_ownership_NONE=0
+            home_ownership_OTHER=0
+            home_ownership_OWN=0
+            home_ownership_RENT=0
+      
+        if verification_status =='Source Verified':
+           verification_status_Source_Verified=1
+           verification_status_Verified=0
+        elif verification_status =='Verified':
+             verification_status_Source_Verified=0
+             verification_status_Verified=1
+        else:
+             verification_status_Source_Verified=0
+             verification_status_Verified=0
+    
+        if purpose =='credit_card':
+           purpose_credit_card=1
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=0
+        elif purpose =='debt_consolidation':
+           purpose_credit_card=0
+           purpose_debt_consolidation=1
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=0
+        elif purpose =='educational':
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=1
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=0
+        elif purpose =='home_improvement':
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=1
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=0
+        elif purpose =='house':
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=1
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=0
+        elif purpose =='major_purchase':
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=1
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=0
+        elif purpose =='medical':
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=1
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=0
+        elif purpose =='moving':
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=1
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=0
+        elif purpose =='other':
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=1
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=0
+        elif purpose =='renewable_energy':
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=1
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=0
+        elif purpose =='small_business':
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=1
+           purpose_vacation=0
+           purpose_wedding=0
+        elif purpose =='vacation':
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=1
+           purpose_wedding=0
+        elif purpose =='wedding':
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=1
+        else:
+           purpose_credit_card=0
+           purpose_debt_consolidation=0
+           purpose_educational=0
+           purpose_home_improvement=0
+           purpose_house=0
+           purpose_major_purchase=0
+           purpose_medical=0
+           purpose_moving=0
+           purpose_other=0
+           purpose_renewable_energy=0
+           purpose_small_business=0
+           purpose_vacation=0
+           purpose_wedding=0
+    
+        query = np.array([[loan_amnt, term, int_rate, installment, grade, sub_grade, emp_length, annual_inc, dti, delinq_2yrs,
+              inq_last_6mths, open_acc,	pub_rec, revol_bal,	revol_util,	total_acc, last_pymnt_amnt, home_ownership_MORTGAGE,
+              home_ownership_NONE,	home_ownership_OTHER, home_ownership_OWN, home_ownership_RENT, verification_status_Source_Verified,
+              verification_status_Verified,	purpose_credit_card, purpose_debt_consolidation, purpose_educational,
+              purpose_home_improvement,	purpose_house, purpose_major_purchase, purpose_medical,	purpose_moving,
+              purpose_other, purpose_renewable_energy, purpose_small_business, purpose_vacation, purpose_wedding]])
+        query = query.reshape(1,37)
+    
+        prediction=int(model.predict(query)[0])
+        st.title("Prediction:")
+        if prediction ==0:
+          st.subheader("APPROVED")
+        else:
+          st.subheader("REJECTED")  
+      
+    elif selected == "EMI Calculator":
+      st.title('EMI Calculator')
+      st.write('Enter EMI details here.')
+      def calculate_emi(principal, annual_interest_rate, loan_term):
+          monthly_interest_rate = annual_interest_rate / 12 / 100
+          number_of_payments = loan_term * 12
+          emi = (principal * monthly_interest_rate * ((1 + monthly_interest_rate) ** number_of_payments)) / (((1 + monthly_interest_rate) ** number_of_payments) - 1)
+          total_payment = emi * number_of_payments
+          total_interest = total_payment - principal
+          return emi, total_interest, total_payment
+
+      def main():
+          st.title("EMI Calculator")
+    
+      principal = st.number_input("Loan Amount", value=0.00)
+      annual_interest_rate = st.number_input("Annual Interest Rate (%)", value=0.0, step=0.1)
+      loan_term = st.number_input("Loan Term (years)", value=0)
+    
+      if st.button("Calculate"):
+        emi, total_interest, total_payment = calculate_emi(principal, annual_interest_rate, loan_term)
+        
+        col1, col2 = st.columns([3, 2])
+        
+        with col1:
+            st.subheader("EMI:")
+            st.write(f"{emi:.2f} INR")
+            st.subheader("Total Interest Payable:")
+            st.write(f"{total_interest:.2f} INR")
+            st.subheader("Total Payment Payable:")
+            st.write(f"{total_payment:.2f} INR")
+        
+        with col2:
+            # Pie Chart
+            fig, ax = plt.subplots(facecolor='#192841')
+            labels = ['Principal', 'Interest']
+            sizes = [principal, total_interest]
+            colors = ['#2E8B57', '#FF6347']
+            ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=colors, labeldistance=1.05, textprops={'color': 'white'})
+            ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+            ax.set_facecolor('#192841')
+            ax.legend(facecolor='#192841', edgecolor='white', labelcolor='white')
+            st.pyplot(fig)
+        
+        # Amortization Schedule
+        fig, ax = plt.subplots(figsize=(5, 3), facecolor='#192841')
+        fig.__sizeof__=('0,2')
+        months = np.arange(1, loan_term * 12 + 1)
+        principal_remaining = principal
+        interest_paid = 0
+        principal_paid = 0
+        principal_schedule = []
+        interest_schedule = []
+        
+        for month in months:
+            interest_this_month = principal_remaining * (annual_interest_rate / 12 / 100)
+            principal_this_month = emi - interest_this_month
+            principal_remaining -= principal_this_month
+            interest_paid += interest_this_month
+            principal_paid += principal_this_month
+            principal_schedule.append(principal_remaining)
+            interest_schedule.append(interest_this_month)
+        
+        ax.plot(months, principal_schedule, label='Principal Remaining', color='#2E8B57')
+        ax.plot(months, interest_schedule, label='Interest Paid', color='#FF6347')
+        ax.set_xlabel('Months', color='white')
+        ax.set_ylabel('Amount (INR)', color='white')
+        ax.set_title('Amortization Schedule', color='white')
+        ax.legend()
+        ax.grid(color='lightgray', linestyle='--', linewidth=0.5)
+        ax.set_facecolor('#192841')
+        plt.xticks(color='white')
+        plt.yticks(color='white')
+        st.pyplot(fig)
+        
+        # Animation
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+        for i in range(101):
+            progress_bar.progress(i)
+            status_text.text(f'Calculating... {i}%')
+            time.sleep(0.05)
+        progress_bar.empty()
+        status_text.text('Calculation Complete!')
+
+    elif selected == "Check CIBIL Score":
+      st.title('CIBIL Score Calculator')
+      st.write('Enter details here.')
+      def calculate_cibil_score(age, income, loan_amount, loan_tenure, existing_loan_emi, credit_card_balance, 
+                          dependents, employment_years, recent_credit_inquiries, late_payments, total_accounts,
+                          credit_utilization_ratio):
+    # Calculate CIBIL score
+          cibil_score = 700 + (age * 5) + (income / 100000) - (loan_amount / 1000000) - (loan_tenure / 2) - \
+                  (existing_loan_emi / 10000) - (credit_card_balance / 10000) + (dependents * 10) - \
+                  (employment_years * 5) - (recent_credit_inquiries * 20) - (late_payments * 30) + \
+                  (total_accounts * 20) - (credit_utilization_ratio * 10)
+    
+          return int(cibil_score)
+
+# Function to display CIBIL score category
+      def get_score_category(cibil_score):
+        if cibil_score >= 800:
+          return "Excellent"
+        elif 750 <= cibil_score < 800:
+          return "Good"
+        elif 700 <= cibil_score < 750:
+          return "Average"
+        else:
+          return "Bad"
+
+    # Creating two columns for arranging inputs side by side
+      col1, col2 = st.columns(2)
+
+    # User inputs
+      with col1:
+        age = st.number_input("Your Age:", min_value=0, max_value=100, value=0)
+        loan_amount = st.number_input("Loan Amount Requested (INR):", value=0)
+        existing_loan_emi = st.number_input("Existing Loan EMI (INR):", value=0)
+        dependents = st.number_input("Number of Dependents:", min_value=0, value=0)
+        recent_credit_inquiries = st.number_input("Recent Credit Inquiries (6 months):", min_value=0, value=0)
+        credit_utilization_ratio = st.number_input("Credit Utilization Ratio:", min_value=0, value=0)
+
+      with col2:
+        income = st.number_input("Your Annual Income (INR):", value=0)
+        loan_tenure = st.number_input("Loan Tenure (Years):", min_value=0, value=0)
+        credit_card_balance = st.number_input("Credit Card Balance (INR):", value=0)
+        employment_years = st.number_input("Years in Current Employment:", min_value=0, value=0)
+        late_payments = st.number_input("Late Payments (2 years):", min_value=0, value=0)
+        total_accounts = st.number_input("Total Number of Accounts:", min_value=0, value=0)
+
+      if st.button("Calculate CIBIL Score"):
+        # Calculate CIBIL score
+        cibil_score = calculate_cibil_score(age, income, loan_amount, loan_tenure, existing_loan_emi, credit_card_balance, 
+                                            dependents, employment_years, recent_credit_inquiries, late_payments, total_accounts,
+                                            credit_utilization_ratio)
+
+        # Display CIBIL score and category
+        st.subheader("Your CIBIL Score:")
+        st.write(f"**{cibil_score}**")
+
+        score_category = get_score_category(cibil_score)
+        st.subheader("Score Category:")
+        st.write(score_category)
+
+        # Display score category with animation
+        if score_category == "Excellent":
+            st.success("Congratulations! You have an excellent score.")
+        elif score_category == "Good":
+            st.info("Your score is good. Keep it up!")
+        elif score_category == "Average":
+            st.warning("Your score is average. Work on improving it.")
+        else:
+            st.error("Your score is bad. Take steps to improve it.")
+
     elif selected == "Insights":
       st.write("""
       # Shown are the insights of Loan Prediction App.
@@ -410,9 +1029,6 @@ with content:
 
 
       #######################
-      # Sidebar
-      with st.sidebar:
-           st.title('Loan Data Dashboard')
     
       year_list = list(df_reshaped.year.unique())[::-1]
     
@@ -446,7 +1062,7 @@ with content:
             strokeWidth=alt.value(0.25),
             ).properties(width=900
             ).configure_axis(
-            labelFontSize=12,
+            labelFontSize=12, 
             titleFontSize=12
             ) 
       # height=300
@@ -454,19 +1070,16 @@ with content:
 
       # Choropleth map
       df = pd.read_csv("./pending.csv")
-      def make_choropleth(df):
-          choropleth = px.choropleth(
-          df,
+      def make_choropleth(df,input_column,input_color_theme):
+          choropleth = px.choropleth(df,color=input_column,color_continuous_scale=input_color_theme,
           geojson="https://gist.githubusercontent.com/jbrobst/56c13bbbf9d97d187fea01ca62ea5112/raw/e388c4cae20aa53cb5090210a42ebb9b765c0a36/india_states.geojson",
           featureidkey='properties.ST_NM',
           locations='state',
-          color='pending loans',
-          color_continuous_scale='Reds'
           )
           choropleth.update_layout(
           template='plotly_dark',
-          plot_bgcolor='rgba(0, 0, 255, 0)',
-          paper_bgcolor='rgba(0, 0, 255, 0)',
+          plot_bgcolor='#192841',
+          paper_bgcolor='#192841',
           margin=dict(l=0, r=0, t=0, b=0),
           height=350
           )
@@ -520,11 +1133,11 @@ with content:
 
       # Convert population to text 
       def format_number(num):
-          if num > 10000000:
-              if not num % 10000000:
-                  return f'{num // 10000000} K'
-              return f'{round(num / 10000000, 1)} K'
-          return f'{num // 100000} K'
+          if num > 1000:
+              if not num % 1000:
+                  return f'{num // 1000} K'
+              return f'{round(num / 1000, 1)} K'
+          return f'{num // 1000} K'
 
       # Calculation year-over-year population
       def calculate_loans_difference(input_df, input_year):
@@ -567,8 +1180,8 @@ with content:
             st.markdown('#### States loans')
 
             if selected_year > 2010:
-                df_greater_50000 = df_loans_difference_sorted[df_loans_difference_sorted.loans_difference > 50000]
-                df_less_50000 = df_loans_difference_sorted[df_loans_difference_sorted.loans_difference < -50000]
+                df_greater_50000 = df_loans_difference_sorted[df_loans_difference_sorted.loans_difference > 50]
+                df_less_50000 = df_loans_difference_sorted[df_loans_difference_sorted.loans_difference < -5]
         
                 # % of States with population difference > 50000
                 states_loan_greater = round((len(df_greater_50000)/df_loans_difference_sorted.states.nunique())*100)
@@ -589,10 +1202,10 @@ with content:
                 st.altair_chart(donut_chart_less)
 
       with col[1]:
-          st.markdown("<h3 style='color: #FAFAFA; text-align: center;'>Total Loans</h3>", unsafe_allow_html=True)
+          st.markdown("<h3 style='color: #FAFAFA; text-align: center;'>States</h3>", unsafe_allow_html=True)
 
     
-          choropleth = make_choropleth(df)
+          choropleth = make_choropleth(df,'pending loans',selected_color_theme)
           st.plotly_chart(choropleth, use_container_width=True)
     
           heatmap = make_heatmap(df_reshaped, 'year', 'states', 'loans', selected_color_theme)
@@ -600,7 +1213,7 @@ with content:
     
 
       with col[2]:
-          st.markdown('#### Top States')
+          st.markdown('#### Total loans')
 
           st.dataframe(df_selected_year_sorted,
                  column_order=("states", "loans"),
@@ -622,360 +1235,118 @@ with content:
         st.write('''
             - Data: [INDIA.DATA](https://www.kaggle.com/datasets/tanishaj225/loancsv)
             - :orange[**Approved/Rejected**]: states with high approved/ rejected loans for selected year
-            - :orange[**States Loans**]: percentage of states with annual approved/ rejected loans > 50,000
+            - :orange[**States Loans**]: percentage of states with annual approved/ rejected loans > 15,000
             ''')
       
     elif selected == "Chat Bot":
 
       # app config
+      def load_lottiefile2(filepath : str):
+        with open("C:\\Users\\shubh\\Desktop\\CP\\new.json","r", encoding="utf-8") as g:
+         return   json.load(g)
+      lottie = load_lottiefile2("C:\\Users\\shubh\\Desktop\\CP\\loan.json") 
       st.title("Chat-Bot")
+      st_lottie(lottie,key='loc1',height=120,width=170)
+      st.subheader("",divider="rainbow", anchor=False)
 
-      openai.api_key = st.secrets["OPENAI_API_KEY"]
+      client = Groq(
+      api_key=st.secrets["GROQ_API_KEY"],
+      )
 
-      # Set a default model
-      if "openai_model" not in st.session_state:
-          st.session_state["openai_model"] = "gpt-3.5-turbo"
-
-      # Initialize chat history
+      # Initialize chat history and selected model
       if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+      if "selected_model" not in st.session_state:
+        st.session_state.selected_model = None
+
+      # Define model details
+      models = {
+        "mixtral-8x7b-32768": {"name": "Mixtral-8x7b-Instruct-v0.1", "tokens": 32768, "developer": "Mistral"},
+        "llama2-70b-4096": {"name": "LLaMA2-70b-chat", "tokens": 4096, "developer": "Meta"},
+        "gemma-7b-it": {"name": "Gemma-7b-it", "tokens": 8192, "developer": "Google"}
+      }
+
+        # Layout for model selection and max_tokens slider
+      col1, col2 = st.columns(2)
+
+      with col1:
+        model_option = st.selectbox(
+          "Choose a model:",
+        options=list(models.keys()),
+        format_func=lambda x: models[x]["name"],
+        index=0  # Default to the first model in the list
+      )
+
+      # Detect model change and clear chat history if model has changed
+      if st.session_state.selected_model != model_option:
           st.session_state.messages = []
+          st.session_state.selected_model = model_option
+
+      max_tokens_range = models[model_option]["tokens"]
+
+      with col2:
+        # Adjust max_tokens slider dynamically based on the selected model
+        max_tokens = st.slider(
+          "Max Tokens:",
+        min_value=512,  # Minimum value to allow some flexibility
+        max_value=max_tokens_range,
+        # Default value or max allowed if less
+        value=min(32768, max_tokens_range),
+        step=512,
+        help=f"Adjust the maximum number of tokens (words) for the model's response. Max for selected model: {max_tokens_range}"
+        )
 
       # Display chat messages from history on app rerun
       for message in st.session_state.messages:
-          with st.chat_message(message["role"]):
-              st.markdown(message["content"])
+          avatar = '🤖' if message["role"] == "assistant" else '👨‍💻'
+          with st.chat_message(message["role"], avatar=avatar):
+                st.markdown(message["content"])
 
-      # Accept user input
-      prompt = st.chat_input("What is up?")
-      if prompt:
-          with st.chat_message("user"):
-            st.markdown(prompt)
-          st.session_state.messages.append({"role": "user", "content": prompt})
-    
 
-      # Display assistant response in chat message container
-      with st.chat_message("assistant"):
-        message_placeholder = st.empty()
-        full_response = ""
-        for response in openai.chatCompletion.create(
-         model=st.session_state["openai_model"],
-         message=[
-             {"role": m["role"], "content": m["content"]}
+      def generate_chat_responses(chat_completion) -> Generator[str, None, None]:
+        """Yield chat response content from the Groq API response."""
+        for chunk in chat_completion:
+          if chunk.choices[0].delta.content:
+            yield chunk.choices[0].delta.content
+
+
+      if prompt := st.chat_input("Enter your prompt here..."):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+
+            with st.chat_message("user", avatar='👨‍💻'):
+                st.markdown(prompt)
+
+        # Fetch response from Groq API
+            try:
+              chat_completion = client.chat.completions.create(
+            model=model_option,
+            messages=[
+                {
+                    "role": m["role"],
+                    "content": m["content"]
+                }
                 for m in st.session_state.messages
-         ],
-         stream=True,
-         
-     ):
-          full_response += response.choices[0].delta.get("content","")
-        message_placeholder.markdown(full_response + "")
-      message_placeholder.markdown(full_response)
-      st.session_state.messages.append({"role": "user", "content": full_response})
+            ],
+            max_tokens=max_tokens,
+            stream=True
+        )
 
-if st.button('Predict'):
-    # Access loan details and borrower details from session state
-    loan_details = st.session_state.get('loan_details')
-    borrower_details = st.session_state.get('borrower_details')
-    
-    loan_amnt = loan_details['loan_amnt']
-    term = loan_details['term']
-    int_rate = loan_details['int_rate']
-    installment = loan_details['installment']
-    grade = loan_details['grade']
-    # Create a dictionary that maps each grade to its corresponding number
-    grade_map = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6}
-    # Map the selected grade to its corresponding number
-    grade = grade_map.get(grade, -1)
-    
-    sub_grade = loan_details['sub_grade']
-    # Create a dictionary that maps each sub_grade to its corresponding number
-    sub_grade_map= {'A1': 0, 'A2': 1, 'A3': 2, 'A4': 3, 'A5': 4, 
-                    'B1': 5, 'B2': 6, 'B3': 7, 'B4': 8, 'B5': 9, 
-                    'C1': 10, 'C2': 11, 'C3': 12, 'C4': 13, 'C5': 14, 
-                    'D1': 15, 'D2': 16, 'D3': 17, 'D4': 18, 'D5': 19, 
-                    'E1': 20, 'E2': 21, 'E3': 22, 'E4': 23, 'E5': 24, 
-                    'F1': 25, 'F2': 26, 'F3': 27, 'F4': 28, 'F5': 29, 
-                    'G1': 30, 'G2': 31, 'G3': 32, 'G4': 33, 'G5': 34}
-    # Map the selected sub_grade to its corresponding number
-    sub_grade = sub_grade_map.get(sub_grade, -1)
-    
-    last_pymnt_amnt = float(loan_details['last_pymnt_amnt'])
-    
-    emp_length = borrower_details['emp_length']
-    # Create a dictionary that maps each emp_length to its corresponding number
-    emp_length_map= {'<1': 0,'1': 1,'2': 2,'3': 3,
-                    '4': 4, '5': 5,'6': 6,'7': 7,
-                    '8': 8,'9': 9, '10+': 10}
-    # Map the selected sub_grade to its corresponding number
-    emp_length = emp_length_map.get(emp_length, -1)
-    
-    home_ownership = borrower_details['home_ownership']
-    annual_inc = borrower_details['annual_inc']
-    verification_status = borrower_details['verification_status']
-    purpose = borrower_details['purpose']
-    dti = borrower_details['dti']
-    delinq_2yrs = borrower_details['delinq_2yrs']
-    inq_last_6mths = borrower_details['inq_last_6mths']
-    open_acc = borrower_details['open_acc']
-    pub_rec = borrower_details['pub_rec']
-    revol_bal = borrower_details['revol_bal']
-    revol_util = borrower_details['revol_util']
-    total_acc = borrower_details['total_acc']
-    
-    if home_ownership =='MORTGAGE':
-      home_ownership_MORTGAGE=1
-      home_ownership_NONE=0
-      home_ownership_OTHER=0
-      home_ownership_OWN=0
-      home_ownership_RENT=0
-    elif home_ownership =='NONE':
-      home_ownership_MORTGAGE=0
-      home_ownership_NONE=1
-      home_ownership_OTHER=0
-      home_ownership_OWN=0
-      home_ownership_RENT=0
-    elif home_ownership =='OTHER':
-      home_ownership_MORTGAGE=0
-      home_ownership_NONE=0
-      home_ownership_OTHER=1
-      home_ownership_OWN=0
-      home_ownership_RENT=0
-    elif home_ownership =='OWN':
-      home_ownership_MORTGAGE=0
-      home_ownership_NONE=0
-      home_ownership_OTHER=0
-      home_ownership_OWN=1
-      home_ownership_RENT=0
-    elif home_ownership =='RENT':
-      home_ownership_MORTGAGE=0
-      home_ownership_NONE=0
-      home_ownership_OTHER=0
-      home_ownership_OWN=0
-      home_ownership_RENT=1
-    else:
-      home_ownership_MORTGAGE=0
-      home_ownership_NONE=0
-      home_ownership_OTHER=0
-      home_ownership_OWN=0
-      home_ownership_RENT=0
+        # Use the generator function with st.write_stream
+              with st.chat_message("assistant", avatar="🤖"):
+                chat_responses_generator = generate_chat_responses(chat_completion)
+                full_response = st.write_stream(chat_responses_generator)
+            except Exception as e:
+              st.error(e, icon="🚨")
+
+    # Append the full response to session_state.messages
+            if isinstance(full_response, str):
+              st.session_state.messages.append(
+            {"role": "assistant", "content": full_response})
+            else:
+            # Handle the case where full_response is not a string
+              combined_response = "\n".join(str(item) for item in full_response)
+              st.session_state.messages.append(
+                {"role": "assistant", "content": combined_response})
       
-    if verification_status =='Source Verified':
-      verification_status_Source_Verified=1
-      verification_status_Verified=0
-    elif verification_status =='Verified':
-      verification_status_Source_Verified=0
-      verification_status_Verified=1
-    else:
-      verification_status_Source_Verified=0
-      verification_status_Verified=0
-    
-    if purpose =='credit_card':
-      purpose_credit_card=1
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=0
-    elif purpose =='debt_consolidation':
-      purpose_credit_card=0
-      purpose_debt_consolidation=1
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=0
-    elif purpose =='educational':
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=1
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=0
-    elif purpose =='home_improvement':
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=1
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=0
-    elif purpose =='house':
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=1
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=0
-    elif purpose =='major_purchase':
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=1
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=0
-    elif purpose =='medical':
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=1
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=0
-    elif purpose =='moving':
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=1
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=0
-    elif purpose =='other':
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=1
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=0
-    elif purpose =='renewable_energy':
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=1
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=0
-    elif purpose =='small_business':
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=1
-      purpose_vacation=0
-      purpose_wedding=0
-    elif purpose =='vacation':
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=1
-      purpose_wedding=0
-    elif purpose =='wedding':
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=1
-    else:
-      purpose_credit_card=0
-      purpose_debt_consolidation=0
-      purpose_educational=0
-      purpose_home_improvement=0
-      purpose_house=0
-      purpose_major_purchase=0
-      purpose_medical=0
-      purpose_moving=0
-      purpose_other=0
-      purpose_renewable_energy=0
-      purpose_small_business=0
-      purpose_vacation=0
-      purpose_wedding=0
-    
-    query = np.array([[loan_amnt, term, int_rate, installment, grade, sub_grade, emp_length, annual_inc, dti, delinq_2yrs,
-              inq_last_6mths, open_acc,	pub_rec, revol_bal,	revol_util,	total_acc, last_pymnt_amnt, home_ownership_MORTGAGE,
-              home_ownership_NONE,	home_ownership_OTHER, home_ownership_OWN, home_ownership_RENT, verification_status_Source_Verified,
-              verification_status_Verified,	purpose_credit_card, purpose_debt_consolidation, purpose_educational,
-              purpose_home_improvement,	purpose_house, purpose_major_purchase, purpose_medical,	purpose_moving,
-              purpose_other, purpose_renewable_energy, purpose_small_business, purpose_vacation, purpose_wedding]])
-    query = query.reshape(1,37)
-    
-    prediction=int(model.predict(query)[0])
-    st.title("Prediction:")
-    if prediction ==0:
-      st.subheader("APPROVED")
-    else:
-      st.subheader("REJECTED")  
+
