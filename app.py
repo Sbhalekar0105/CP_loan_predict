@@ -1077,8 +1077,8 @@ with content:
           )
           choropleth.update_layout(
           template='plotly_dark',
-          plot_bgcolor='#192841',
-          paper_bgcolor='#192841',
+          plot_bgcolor='#0E1117',
+          paper_bgcolor='#0E1117',
           margin=dict(l=0, r=0, t=0, b=0),
           height=350
           )
