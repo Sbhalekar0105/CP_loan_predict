@@ -242,14 +242,14 @@ with content:
       box1_style = """
         padding: 14px;
         border-radius: 10px;
-        background-color: #3FB0E8;
+        background-color: #FF4B4B;
         color: white;
         margin-bottom: 1px;
         """
       box2_style = """
         padding: 3px;
         border-radius: 10px;
-        background-color: #3FB0E8;
+        background-color: #FF4B4B;
         color: white;
         """
       eligibility_criteria = """
@@ -438,7 +438,7 @@ with content:
       <style>
       div.row-widget.stRadio>div{flex-direction:column;}
       th {
-      background-color: #3FB0E8;
+      background-color: #FF4B4B;
       color: #F9F9F9; 
       }
       </style>
