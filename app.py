@@ -7,7 +7,6 @@ import plotly.express as px
 import numpy as np
 from streamlit_option_menu import option_menu
 from typing import Generator
-from groq import Groq 
 import json
 import matplotlib.pyplot as plt
 import time
