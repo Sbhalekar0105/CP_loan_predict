@@ -7,6 +7,7 @@ import plotly.express as px
 import numpy as np
 from streamlit_option_menu import option_menu
 from typing import Generator
+from groq import Groq 
 import json
 import matplotlib.pyplot as plt
 import time
@@ -220,24 +221,66 @@ with content:
       st.subheader("",divider="rainbow", anchor=False)
       st.markdown("<h2 style='text-align: center; margin-bottom: -0.9em;'>Do you think a personal loan needs too much effort?</h2>", unsafe_allow_html=True)
       st.markdown("<h5 style='text-align: center; margin-bottom: 30px;'>Getting a personal loan was never this easy</h5>", unsafe_allow_html=True)
-# Function to display markdown content with image
-      def display_image_with_text(image_path, title, content):
-       st.image(image=image_path,width=80, caption=title)
-       st.write(content)
-# Display images using display_image_with_text function
+# Define layout with columns
       col1, col2, col3 = st.columns(3)
-
+# Populate columns with images and text
       with col1:
-       display_image_with_text("1.png", "Instant personal loans", "Get instant personal loans from 5000 to 5 lakh to fit all your needs and dreams")
-       display_image_with_text("2.jpg", "Quick Approvals & Disbursals", "Get prompt loan approval and money in your account")
-
+        c1,c2,c3=st.columns(3)
+        with c2:
+          st.image("1.jpg",width=80)
+        st.markdown("<div style='text-align: center;'><b>Instant personal loans</b></div><div style='text-align: center;'>Get instant personal loans from 5000 to 5 lakh to fit all your needs and dreams</div>",unsafe_allow_html=True)
+        st.markdown(
+        """
+        <style>
+        .padding-example {
+        padding: 35px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+        )
+        c1,c2,c3=st.columns(3)
+        with c2:
+          st.image("2.jpg",width=80)
+        st.markdown("<div style='text-align: center;'><b>Quick Approvals & Disbursals</b></div><div style='text-align: center;'>Get prompt loan approval and money in your account</div>",unsafe_allow_html=True)
       with col2:
-       display_image_with_text("3.jpg", "Paperless Documentation", "Upload pictures of your KYC documents and sign your loan application digitally")
-       display_image_with_text("4.jpg", "ZERO Affordable EMI plans", "Easy to manage EMI plans with reminders and auto-debit features so that you don't miss out on timely payments")
-
+        c1,c2,c3=st.columns(3)
+        with c2:
+          st.image("3.jpg",width=80)
+        st.markdown("<div style='text-align: center;'><b>Paperless Documentation</b></div><div style='text-align: center;'>Upload pictures of your KYC documents and sign your loan application digitally</div>",unsafe_allow_html=True)
+        st.markdown(
+        """
+        <style>
+        .padding-example {
+        padding: 35px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+        )
+        c1,c2,c3=st.columns(3)
+        with c2:
+          st.image("4.jpg",width=80)
+        st.markdown("<div style='text-align: center;'><b>Affordable EMI plans</b></div><div style='text-align: center;'>Easy to manage EMI plans with reminders and auto-debit features so that you don't miss out on timely payments</div>",unsafe_allow_html=True)
       with col3:
-       display_image_with_text("5.jpg", "One-click subsequent personal loans", "Need another loan from PaySense? With one-time documentation, it's just a click away.")
-       display_image_with_text("6.jpg", "Zero Credit History", "Never taken a personal loan previously? It's okay - we serve the users who are new to the credit and lending system.")     
+        c1,c2,c3=st.columns(3)
+        with c2:
+          st.image("5.jpg",width=80)
+        st.markdown("<div style='text-align: center;'><b>One-click subsequent personal loans</b></div><div style='text-align: center;'>Need another loan from PaySense? With one-time documentation, it's just a click away.</div>",unsafe_allow_html=True)
+        st.markdown(
+        """
+        <style>
+        .padding-example {
+        padding: 35px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+        )
+        c1,c2,c3=st.columns(3)
+        with c2:
+          st.image("6.jpg",width=80)
+        st.markdown("<div style='text-align: center;'><b>Zero Credit History</b></div><div style='text-align: center;'>Never taken a personal loan previously? It's okay - we serve the users who are new to the credit and lending system.</div>",unsafe_allow_html=True)      
       st.subheader("",divider="rainbow", anchor=False)
       box1_style = """
         padding: 14px;
@@ -247,7 +290,7 @@ with content:
         margin-bottom: 1px;
         """
       box2_style = """
-        padding: 3px;
+        padding: 1.5px;
         border-radius: 10px;
         background-color: #FF4B4B;
         color: white;
@@ -438,7 +481,7 @@ with content:
       <style>
       div.row-widget.stRadio>div{flex-direction:column;}
       th {
-      background-color: #FF4B4B;
+      background-color: #3FB0E8;
       color: #F9F9F9; 
       }
       </style>
@@ -930,7 +973,7 @@ with content:
 
     # User inputs
       with col1:
-        age = st.number_input("Your Age:", min_value=0, max_value=100, value=0)
+        age = st.number_input("Your Age:", min_value=21, max_value=100, value=21)
         loan_amount = st.number_input("Loan Amount Requested (INR):", value=0)
         existing_loan_emi = st.number_input("Existing Loan EMI (INR):", value=0)
         dependents = st.number_input("Number of Dependents:", min_value=0, value=0)
@@ -1248,6 +1291,9 @@ with content:
       st_lottie(lottie,key='loc1',height=120,width=170)
       st.subheader("",divider="rainbow", anchor=False)
 
+      client = Groq(
+      api_key=st.secrets["GROQ_API_KEY"],
+      )
 
       # Initialize chat history and selected model
       if "messages" not in st.session_state:
@@ -1344,5 +1390,4 @@ with content:
               combined_response = "\n".join(str(item) for item in full_response)
               st.session_state.messages.append(
                 {"role": "assistant", "content": combined_response})
-      
       
