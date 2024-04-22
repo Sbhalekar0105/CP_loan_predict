@@ -1290,10 +1290,6 @@ with content:
       st_lottie(lottie,key='loc1',height=120,width=170)
       st.subheader("",divider="rainbow", anchor=False)
 
-      client = Groq(
-      api_key=st.secrets["GROQ_API_KEY"],
-      )
-
       # Initialize chat history and selected model
       if "messages" not in st.session_state:
         st.session_state.messages = []
