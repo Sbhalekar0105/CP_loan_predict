@@ -535,10 +535,10 @@ with content:
       loan_amnt = st.number_input('Loan Amount', min_value=0)
       term = st.selectbox('Term', [36,60])
       int_rate = st.number_input('Interest Rate', min_value=0.0, step=5.0, format="%.2f")
-      installment = st.number_input('Monthly Payment', min_value=0.0, step=50.0, format="%.2f")
+      installment = st.number_input('Loan Payment Amount', min_value=0.0, step=50.0, format="%.2f")
       grade = st.selectbox('Grade', np.sort(df['grade'].unique(), kind='mergesort'))
       sub_grade = st.selectbox('Sub-Grade', np.sort(df['sub_grade'].unique(), kind='mergesort'))
-      last_pymnt_amnt = st.number_input('Loan Payment Amount', min_value=0.0, step=100.0, format="%.2f")
+      last_pymnt_amnt = st.number_input('Monthly Payment', min_value=0.0, step=100.0, format="%.2f")
       
       st.session_state['loan_details'] = {
         'loan_amnt': loan_amnt,
